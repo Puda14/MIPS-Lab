@@ -39,7 +39,7 @@ GET_LENGTH:
 	end_of_get_length:
 	save_length: 
 		add $t2, $zero, $v0 
-		subi $t2, $t2, 1 #NULL characters are not counted 
+		subi $t2, $t2, 1 #'\n' characters are not counted 
 	
 REVERSE_STRING:
 	add $t0, $zero, $zero #i = 0
