@@ -28,7 +28,7 @@ main:
 	end_of_get_length:
 	print_length: # TODO
 		add $a1, $zero, $v0 
-		subi $a1, $a1, 1 #NULL characters are not counted
+		subi $a1, $a1, 1 #'\n' characters are not counted
 		li $v0, 56
  		la $a0, Message2
  		syscall 
