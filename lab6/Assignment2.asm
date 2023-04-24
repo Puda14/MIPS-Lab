@@ -1,27 +1,22 @@
 # Laboratory Exercise 6, Assignment 2
 # Author: Phung Tien Dat - 20210163
 .data
-	A: .word 7, -2, 5, 1, 5,6,7,3,60,8,8,59,5
+	A: .word 1,2,-4,5,10,3,-12,200
 	Aend: .word
 .text
 main: 
 	la $a0,A #$a0 = Address(A[0])
 	la $a1,Aend
+	addi $a2, $a1, 0
 	addi $a1,$a1,-4 #$a1 = Address(A[n-1])
 	j sort #sort
 after_sort: 
+	j print_array
+	after_print:
 	li $v0, 10 #exit
 	syscall
 end_main:
-#--------------------------------------------------------------
-#procedure sort (ascending selection sort using pointer)
-#register usage in sort program
-#$a0 pointer to the first element in unsorted part
-#$a1 pointer to the last element in unsorted part
-#$t0 temporary place for value of last element
-#$v0 pointer to max element in unsorted part
-#$v1 value of max element in unsorted part
-#--------------------------------------------------------------
+
 sort: 
 	beq $a0,$a1,done #single element list is sorted
 	j max #call the max procedure
@@ -33,12 +28,6 @@ after_max:
 	j sort #repeat sort for smaller list
 done: 
 	j after_sort
-#------------------------------------------------------------------------
-#Procedure max
-#function: fax the value and address of max element in the list
-#$a0 pointer to first element
-#$a1 pointer to last element
-#------------------------------------------------------------------------
 max:
 	addi $v0,$a0,0 #init max pointer to first element
 	lw $v1,0($v0) #init max value to first value
@@ -54,3 +43,17 @@ loop:
 	j loop #change completed; now repeat
 ret:
 	j after_max
+
+print_array:
+	addi $t0, $a0, 0
+	loop2:
+		slt $t6, $t0, $a2
+		beq $t6, $zero, after_print
+		li $v0, 1
+		lw $a0, 0($t0)
+		syscall
+		li $v0, 11
+		li $a0, 32
+		syscall
+		addi $t0, $t0, 4
+		j loop2
