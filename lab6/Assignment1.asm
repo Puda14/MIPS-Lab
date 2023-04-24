@@ -1,32 +1,22 @@
 # Laboratory Exercise 6, Assignment 1
 # Author: Phung Tien Dat - 20210163
 .data
-	A: .word -2, 6, 1, -3, -2
+	A: .word  1, 2, 3, 4, 5
 .text
 	main: la $a0,A
 	li $a1,5
 	j mspfx
 	nop
 continue:
+	addi $t6, $v0, 0 #save length of max-sum to $t6
+	addi $t7, $v1, 0 #save value of max-sum to $t7
 	li $v0, 10 #exit
 	syscall
  	nop
 end_of_main:
-#-----------------------------------------------------------------
-#Procedure mspfx
-# @brief find the maximum-sum prefix in a list of integers
-# @param[in] a0 the base address of this list(A) need to be processed
-# @param[in] a1 the number of elements in list(A)
-# @param[out] v0 the length of sub-array of A in which max sum reachs.
-# @param[out] v1 the max sum of a certain sub-array
-#-----------------------------------------------------------------
-#Procedure mspfx
-#function: find the maximum-sum prefix in a list of integers
-#the base address of this list(A) in $a0 and the number of
-#elements is stored in a1
 mspfx: 
 	addi $v0,$zero,0 #initialize length in $v0 to 0
-	li $v1,0x80000000#initialize length in $v0 to 0x80000000
+	li $v1,0x80000000#initialize max-sum in $v0 to 0x80000000
 	addi $t0,$zero,0 #initialize index i in $t0 to 0
 	addi $t1,$zero,0 #initialize running sum in $t1 to 0
 loop: 
@@ -47,3 +37,6 @@ test:
 	bne $t5,$zero,loop #repeat if i<n
 done: 
 	j continue
+	
+	
+
