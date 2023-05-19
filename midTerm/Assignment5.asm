@@ -68,7 +68,7 @@ decimalToHex:
 		srl $t2, $t2, 4# next bit
 		sw $t3, 0($sp) #store bit to stack
 		addi $t1, $t1, 1
-		slt $t4, $t1, $t0 # index < 32
+		slt $t4, $t1, $t0 # index < 8
 		bne $t4, $zero, loop2
 	
 	li $v0,11 #option to print
