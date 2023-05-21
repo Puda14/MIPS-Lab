@@ -6,27 +6,31 @@
 	endLine: .asciiz "\n"
 	hexDigit:.asciiz "0123456789ABCDEF"
 .text
-
+loop_input:
 main:
 	li $v0, 51
 	la $a0, Message
 	syscall 
 	
-	add $a1, $a0, $zero
+	add $a1, $a0, $zero #a1: input
 	jal decimalToBinary
 	li $v0, 4
 	la $a0, endLine
 	syscall
 	jal decimalToHex
-
+	li $v0, 4
+	la $a0, endLine
+	syscall
+	
+	bne $a1, $zero, loop_input
 	li $v0, 10
 	syscall
 endMain:
 
 decimalToBinary:
-	addi $t0, $zero, 32
-	addi $t1, $zero, 0 #index
-	addi $t2, $a1, 0 
+	addi $t0, $zero, 32#32 bits
+	addi $t1, $zero, 0#index
+	addi $t2, $a1, 0  # $t2 = input 
 	addi $fp, $sp, 0
 	print1:
 		li $v0, 4
@@ -34,12 +38,11 @@ decimalToBinary:
 		syscall
 	loop1:
 		addi $sp, $sp, -4
-		andi $t3, $t2, 1
+		andi $t3, $t2, 1#get 
 		srl $t2, $t2, 1# next bit
 		sw $t3, 0($sp) #store bit to stack
-		addi $t1, $t1, 1
-		slt $t4, $t1, $t0 # index < 32
-		bne $t4, $zero, loop1
+		addi $t1, $t1, 1#get the last bit
+		bgt $t0, $t1, loop1# 32 > index 
 	
 	li $v0, 1 #option to print
 	showBinary:
@@ -47,8 +50,7 @@ decimalToBinary:
 		add $a0, $t3, $zero
 		syscall
 		addi $sp, $sp, 4
-		slt $t4, $sp, $fp
-		bne $t4, $zero, showBinary
+		bgt $fp, $sp, showBinary
 	freeFrameStack1:
 	addi $fp, $zero, 0 
 	jr $ra
@@ -65,20 +67,18 @@ decimalToHex:
 	loop2:
 		addi $sp, $sp, -4
 		andi $t3, $t2, 15
-		srl $t2, $t2, 4# next bit
-		sw $t3, 0($sp) #store bit to stack
+		srl $t2, $t2, 4# next 4 bits
+		sw $t3, 0($sp) #store 4bits to stack
 		addi $t1, $t1, 1
-		slt $t4, $t1, $t0 # index < 8
-		bne $t4, $zero, loop2
+		bgt $t0, $t1, loop2#index > 8
 	
 	li $v0,11 #option to print
 	showHex:
 		lw $t3, 0($sp)
-		lb $a0,hexDigit($t3)
+		lb $a0,hexDigit($t3)#get characters in Hexa
 		syscall
 		addi $sp, $sp, 4
-		slt $t4, $sp, $fp
-		bne $t4, $zero, showHex
+		bgt $fp, $sp, showHex
 	freeFrameStack2:
 	addi $fp, $zero, 0 
 	jr $ra
