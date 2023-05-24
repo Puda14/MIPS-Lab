@@ -28,9 +28,8 @@ main:
 endMain:
 
 decimalToBinary:
-	addi $t0, $zero, 32#32 bits
-	addi $t1, $zero, 0#index
-	addi $t2, $a1, 0  # $t2 = input 
+	addi $t0, $zero, 32#index = 32 bits
+	addi $t2, $a1, 0  #$t2 = input 
 	addi $fp, $sp, 0
 	print1:
 		li $v0, 4
@@ -39,10 +38,10 @@ decimalToBinary:
 	loop1:
 		addi $sp, $sp, -4
 		andi $t3, $t2, 1#get 
-		srl $t2, $t2, 1# next bit
+		srl $t2, $t2, 1#next bit
 		sw $t3, 0($sp) #store bit to stack
-		addi $t1, $t1, 1#get the last bit
-		bgt $t0, $t1, loop1# 32 > index 
+		addi $t0, $t0, -1#get the last bit
+		bgtz $t0,loop1# index > 0
 	
 	li $v0, 1 #option to print
 	showBinary:
@@ -56,9 +55,8 @@ decimalToBinary:
 	jr $ra
 	
 decimalToHex:
-	addi $t0, $zero, 8
-	addi $t1, $zero, 0 #index
-	addi $t2, $a1, 0 
+	addi $t0, $zero, 8#index
+	addi $t2, $a1, 0  #$t2 = input 
 	addi $fp, $sp, 0
 	print2:
 		li $v0, 4
@@ -69,8 +67,8 @@ decimalToHex:
 		andi $t3, $t2, 15
 		srl $t2, $t2, 4# next 4 bits
 		sw $t3, 0($sp) #store 4bits to stack
-		addi $t1, $t1, 1
-		bgt $t0, $t1, loop2#index > 8
+		addi $t0, $t0, -1
+		bgtz $t0, loop2#index > 0
 	
 	li $v0,11 #option to print
 	showHex:
